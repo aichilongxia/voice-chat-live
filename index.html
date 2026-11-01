@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f2ed">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; connect-src 'self' https://0.peerjs.com wss://0.peerjs.com; style-src 'self'; media-src 'self' blob:; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>声聊 · 两人实时聊天</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js" integrity="sha384-x0YgkOr/3UOZP2CRDxGW9e0Q+2Qjyr3uJrm4xU32Y7ZCNAo7Cc7bjhrZMi/dwczu" crossorigin="anonymous"></script>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="identity">
+        <div class="mark" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div><h1>声聊</h1><div class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">正在连接服务…</span></div></div>
+      </div>
+      <div class="header-actions">
+        <button class="quiet-btn" id="voiceCallBtn" type="button" hidden>语音通话</button>
+        <button class="quiet-btn" id="clearBtn" type="button">清屏</button>
+      </div>
+    </header>
+
+    <section class="session-panel">
+      <div class="session-card" id="hostCard">
+        <div class="session-copy"><div class="session-title">邀请一个朋友</div><div class="session-subtitle">生成链接发给对方，即可实时聊天和通话</div></div>
+        <button class="primary-btn" id="createBtn" type="button" disabled>创建邀请链接</button>
+      </div>
+      <div class="session-card" id="shareCard" hidden>
+        <div class="session-copy"><div class="session-title">邀请链接已生成</div><div class="session-subtitle" id="invitePreview">等待复制</div></div>
+        <div class="link-actions"><button class="small-btn" id="copyBtn" type="button">复制链接</button><button class="small-btn" id="shareBtn" type="button">分享</button></div>
+      </div>
+      <div class="session-card" id="joinCard" hidden>
+        <div class="session-copy"><div class="session-title">朋友邀请你加入聊天</div><div class="session-subtitle">加入后可实时发消息，并发起双向语音通话</div></div>
+        <button class="primary-btn" id="joinBtn" type="button" disabled>加入聊天</button>
+      </div>
+      <div class="session-card" id="connectedCard" hidden>
+        <div class="session-copy"><div class="session-title">已连接，可以聊天</div><div class="session-subtitle" id="peerLabel">点对点传输，不经过聊天数据库</div></div>
+        <button class="small-btn" id="endSessionBtn" type="button">结束会话</button>
+      </div>
+    </section>
+
+    <section class="messages" id="messages" aria-live="polite">
+      <div class="day">今天</div>
+      <div class="system-note" id="systemNote">创建邀请链接，或打开朋友发来的邀请链接。</div>
+    </section>
+
+    <footer class="composer-wrap">
+      <div class="call-dock" id="callDock" hidden>
+        <div class="call-info"><div class="call-pulse"></div><div><div class="call-label" id="callLabel">正在通话</div><div class="call-time" id="callTime">00:00</div></div></div>
+        <audio id="remoteAudio" autoplay playsinline controls></audio>
+        <div class="call-buttons">
+          <button class="round-btn answer" id="answerBtn" type="button" hidden>接听</button>
+          <button class="round-btn answer" id="playAudioBtn" type="button" hidden>播放声音</button>
+          <button class="round-btn" id="muteBtn" type="button">麦克风</button>
+          <button class="round-btn hangup" id="hangupBtn" type="button">挂断</button>
+        </div>
+      </div>
+      <div class="composer">
+        <input class="text-input" id="messageInput" autocomplete="off" maxlength="4000" placeholder="连接朋友后输入消息…" disabled>
+        <button class="send-btn" id="sendBtn" type="button" disabled>发送</button>
+      </div>
+      <div class="footer-note">实时文字和语音通过 WebRTC 点对点传输；双方需保持页面打开</div>
+    </footer>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="call-core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
